@@ -58,10 +58,9 @@ configjest="const jestConfig: JestConfigWithTsJest = {
 }"
 
 
-npm init -y 
+npm init -y --silent
 echo $psconfig > package.json 
 npm i --save-dev typescript jest @types/jest @types/node ts-jest ts-node nodemon 
-npx tsc --init
 echo $tsconfig > tsconfig.json
 touch jest.unit.ts
 echo $imptsjest > jest.unit.ts
@@ -70,5 +69,5 @@ echo "
 export default jestConfig" >> jest.unit.ts
 touch script.ts
 touch script.test.ts
-echo "the script: $0 is done ! You are ready to work with typescript and jest:)"
+echo "the script: ts-jest.sh is done ! You are ready to work with typescript and jest now:)"
 exit
