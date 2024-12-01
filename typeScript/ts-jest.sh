@@ -1,47 +1,56 @@
 #!/bin/bash
 # -*- ENCODING: UTF-8 -*-
-psconfig="{
-  \"name\": \"$1\",
-  \"version\": \"1.0.0\",
-  \"description\": \"\",
-  \"main\": \"script.ts\",
-  \"scripts\": {
-    \"start\": \"nodemon ./script.ts\",
-    \"dev\": \"tsc && node ./build/script.js\",
-    \"build\": \"tsc --project ./tsconfig.json\",
-    \"test\": \"jest --clearCache && node --no-warnings --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll -c ./jest.unit.ts\",
-    \"jest\": \"jest -c ./jest.unit.ts\",
-    \"test:coverage\": \"jest --coverage -c ./jest.unit.ts on\"
-  },
-  \"author\": \"westindev\",
-  \"license\": \"ISC\"
-}"
 
-tsconfig="{
- \"compilerOptions\": {
-    \"target\": \"ES2022\",                                 
-    \"module\": \"ES2022\",                                  
-    \"rootDir\": \"./\",                                     
-    \"moduleResolution\": \"node\",                          
-    \"types\": [\"jest\", \"node\"],                         
-    \"outDir\": \"./build\",                                 
-    \"esModuleInterop\": true,                             
-    \"forceConsistentCasingInFileNames\": true,            
-    \"strict\": true,                                      
-    \"skipLibCheck\": true                              
-  }
-}"
+# init npm project
+npm init -y --silent
 
-imptsjest="import type { JestConfigWithTsJest } from 'ts-jest';"
 
-configjest="const jestConfig: JestConfigWithTsJest = {
+psconfig='{
+    "name": "tsj",
+    "version": "1.0.0",
+    "scripts": {
+        "start": "nodemon ./script.ts",
+        "dev": "tsc && node ./build/script.js",
+        "build": "tsc --project ./tsconfig.json",
+        "test": "jest --clearCache && node --no-warnings --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll -c ./jest.unit.ts",
+        "jest": "jest -c ./jest.unit.ts",
+        "test:coverage": "jest --coverage -c ./jest.unit.ts on"
+    },
+    "author": "westindev"
+}'
 
+# create package.json
+echo $psconfig > package.json 
+# install dependencies
+npm i --save-dev typescript jest @types/jest @types/node ts-jest ts-node nodemon 
+
+tsconfig='{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "ES2022",
+        "rootDir": "./",
+        "moduleResolution": "node",
+        "types": [
+            "jest",
+            "node"
+        ],
+        "outDir": "./build",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "skipLibCheck": true
+    }
+}'
+
+# create tsconfig.json
+echo "$tsconfig" > tsconfig.json
+
+jestConfig="import type { JestConfigWithTsJest } from 'ts-jest';
+
+const jestConfig: JestConfigWithTsJest = {
   preset: 'ts-jest/presets/default-esm', 
-  moduleNameMapper: {
-    '^(\\\\.{1,2}/.*)\\\\.js$': '\$1',
-  },
   transform: {
-    '^.+\\\\.tsx?$': [
+    '^.+\\\.tsx?$': [
       'ts-jest',
       {
         useESM: true,
@@ -55,18 +64,14 @@ configjest="const jestConfig: JestConfigWithTsJest = {
   resetMocks: true,
   clearMocks: true,
   verbose: true
-}"
+};
 
+export default jestConfig;"
 
-npm init -y --silent
-echo $psconfig > package.json 
-npm i --save-dev typescript jest @types/jest @types/node ts-jest ts-node nodemon 
-echo $tsconfig > tsconfig.json
-touch jest.unit.ts
-echo $imptsjest > jest.unit.ts
-echo $configjest >> jest.unit.ts
-echo "
-export default jestConfig" >> jest.unit.ts
+# create jest.unit.ts
+echo "$jestConfig" > jest.unit.ts
+
+# create script.ts and script.test.ts
 touch script.ts
 touch script.test.ts
 echo "the script: ts-jest.sh is done ! You are ready to work with typescript and jest now:)"
